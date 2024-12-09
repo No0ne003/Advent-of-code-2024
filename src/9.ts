@@ -45,7 +45,65 @@ function p1(chars: string[]) {
 		c1 = c1 + k * v[k];
 	}
 
-	console.log(c1);
+  console.log("part 1: ", c1)
+}
+
+function p2(input) {
+	let files: Record<number, [number, number]> = {};
+	let blanks: [number, number][] = [];
+
+	let fid = 0;
+	let pos = 0;
+
+	for (let i = 0; i < input.length; i++) {
+		const char = input[i];
+		const x = parseInt(char);
+		if (i % 2 === 0) {
+			if (x === 0) {
+				throw new Error("unexpected x=0 for file");
+			}
+			files[fid] = [pos, x];
+			fid++;
+		} else {
+			if (x !== 0) {
+				blanks.push([pos, x]);
+			}
+		}
+		pos += x;
+	}
+
+	while (fid > 0) {
+		fid--;
+		const [startPos, size] = files[fid];
+		for (let i = 0; i < blanks.length; i++) {
+			const [blankStart, blankLength] = blanks[i];
+			if (blankStart >= startPos) {
+				blanks = blanks.slice(0, i);
+				break;
+			}
+			if (size <= blankLength) {
+				files[fid] = [blankStart, size];
+				if (size === blankLength) {
+					blanks.splice(i, 1);
+				} else {
+					blanks[i] = [blankStart + size, blankLength - size];
+				}
+				break;
+			}
+		}
+	}
+
+	let c2 = 0;
+
+	for (const [fid, [startPos, size]] of Object.entries(files)) {
+		const numFid = parseInt(fid);
+		for (let x = startPos; x < startPos + size; x++) {
+			c2 += numFid * x;
+		}
+	}
+
+  console.log("part 2: ", c2)
 }
 
 p1(input);
+p2(input)
