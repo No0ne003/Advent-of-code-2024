@@ -41,4 +41,4 @@ for (let r = 0; r < grid.length; r++) {
 	}
 }
 
-console.log(new Set(trailheads).size);
+console.log([new Set(trailheads).size, trailheads.length]);
