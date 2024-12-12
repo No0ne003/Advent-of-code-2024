@@ -14,15 +14,11 @@ const directions = [
   [0, -1], // left
 ];
 
-interface RegionDetailsType {
-  key: string;
-  area: number;
-  perimeter: number;
-}
 
-let regionDetails: RegionDetailsType[] = [];
+// part 1
+let regionDetails: any = [];
 
-function calculateRegionProperties(
+function calculateRegionPropertiesP1(
   x: number,
   y: number,
   visited: Set<string>,
@@ -44,7 +40,7 @@ function calculateRegionProperties(
     } else if (grid[nx][ny] !== regionKey) {
       localPerimeter++;
     } else if (!visited.has(`${nx},${ny}`)) {
-      const { area, perimeter } = calculateRegionProperties(
+      const { area, perimeter } = calculateRegionPropertiesP1(
         nx,
         ny,
         visited,
@@ -58,16 +54,16 @@ function calculateRegionProperties(
   return { area: localArea, perimeter: localPerimeter };
 }
 
-const visited = new Set<string>();
+const visitedP1 = new Set<string>();
 
 for (let r = 0; r < grid.length; r++) {
   for (let c = 0; c < grid[0].length; c++) {
     const regionKey = grid[r][c];
     const cellKey = `${r},${c}`;
 
-    if (!visited.has(cellKey)) {
+    if (!visitedP1.has(cellKey)) {
       const { area: regionArea, perimeter: regionPerimeter } =
-        calculateRegionProperties(r, c, visited, regionKey);
+        calculateRegionPropertiesP1(r, c, visitedP1, regionKey);
 
       regionDetails.push({
         key: regionKey,
@@ -78,11 +74,11 @@ for (let r = 0; r < grid.length; r++) {
   }
 }
 
-let total = 0;
+let totalP1 = 0;
 
 regionDetails.forEach(({ area, perimeter }) => {
   const cost = area * perimeter;
-  total += cost;
+  totalP1 += cost;
 });
 
-console.log("\nTotal cost of all regions:", total);
+console.log("Part 1:", totalP1);
